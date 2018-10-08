@@ -1,0 +1,2 @@
+class WishlistedHotel < ApplicationRecord
+end

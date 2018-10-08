@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  resources :checklist_items
+  resources :users_checklisted_items
+  resources :wishlisted_hotels
   resources :notes
   resources :checklists
   resources :blades

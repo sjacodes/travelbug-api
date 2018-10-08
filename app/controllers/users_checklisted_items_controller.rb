@@ -1,0 +1,2 @@
+class UsersChecklistedItemsController < ApplicationController
+end

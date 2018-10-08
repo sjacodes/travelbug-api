@@ -1,0 +1,2 @@
+class UsersChecklistedItem < ApplicationRecord
+end
