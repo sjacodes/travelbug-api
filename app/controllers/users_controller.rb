@@ -23,12 +23,6 @@ class UsersController < ApplicationController
     end
   end
 
-  def get_wishlist
-    @user = User.find(params[:id])
-    @wishlist = Wishlist.where(user: @user)
-    render json:wishlist
-  end
-
   def signup
     @user = User.create(email: params[:email], password: params[:password])
     if @user.valid?
@@ -37,6 +31,12 @@ class UsersController < ApplicationController
     else
       render json: { error: 'failed to create user' }, status: :not_acceptable
     end
+  end
+
+  def get_wishlist
+    @user = User.find(params[:id])
+    @wishlist = Wishlist.where(user: @user)
+    render json:wishlist
   end
 
   def update

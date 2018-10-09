@@ -41,15 +41,21 @@ ActiveRecord::Schema.define(version: 2018_10_08_172749) do
   create_table "users_checklisted_items", force: :cascade do |t|
     t.boolean "checked"
     t.bigint "wishlisted_hotel_id"
+    t.bigint "checklist_item_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["checklist_item_id"], name: "index_users_checklisted_items_on_checklist_item_id"
     t.index ["wishlisted_hotel_id"], name: "index_users_checklisted_items_on_wishlisted_hotel_id"
   end
 
   create_table "wishlisted_hotels", force: :cascade do |t|
     t.text "note"
+    t.bigint "user_id"
+    t.bigint "hotel_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["hotel_id"], name: "index_wishlisted_hotels_on_hotel_id"
+    t.index ["user_id"], name: "index_wishlisted_hotels_on_user_id"
   end
 
 end
