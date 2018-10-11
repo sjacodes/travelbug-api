@@ -8,7 +8,7 @@ class UsersController < ApplicationController
   def signin
     user = User.find_by(email: params[:email])
     if user && user.authenticate(params[:password])
-      render json: {email: user.email, token: issue_token({id: user.id}), id: user.id}
+      render json: {email: user.email, id: user.id}
     else
       render json: { error: 'Invalid username and password combination.' }, status: 400
     end
@@ -23,21 +23,17 @@ class UsersController < ApplicationController
     end
   end
 
+
   def signup
-    @user = User.create(email: params[:email], password: params[:password])
+    @user = User.new(email: params[:email], password: params[:password])
     if @user.valid?
-      Wishlist.create([{user_id: @user.id}, {user_id: @user.id}, {user_id: @user.id}])
-      render json: {email: @user.email, token: issue_token({id: @user.id}), id: @user.id}, status: :created
+      @user.save
+      render json: {email: @user.email, id: @user.id}, status: :created
     else
       render json: { error: 'failed to create user' }, status: :not_acceptable
     end
   end
 
-  def get_wishlist
-    @user = User.find(params[:id])
-    @wishlist = Wishlist.where(user: @user)
-    render json:wishlist
-  end
 
   def update
     @user = User.find(params[:id])
@@ -47,6 +43,12 @@ class UsersController < ApplicationController
     else
       render json: @user.errors
     end
+  end
+
+  def get_wishlist
+    @user = User.find(params[:id])
+    @wishlist = Wishlist.where(user: @user)
+    render json: wishlist
   end
 
   def wishListed
