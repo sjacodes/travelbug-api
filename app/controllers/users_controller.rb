@@ -8,7 +8,7 @@ class UsersController < ApplicationController
   def signin
     user = User.find_by(email: params[:email])
     if user && user.authenticate(params[:password])
-      render json: {email: user.email, id: user.id, wishlisted_hotels: user.findUsersWishListedHotels}
+      render json: user
     else
       render json: { error: 'Invalid username and password combination.' }, status: 400
     end
@@ -23,12 +23,17 @@ class UsersController < ApplicationController
     end
   end
 
+  def get_wishlist
+    user = User.find(params[:user_id])
+    render json: user.wishlisted_hotels
+  end
+
 
   def signup
     @user = User.new(email: params[:email], password: params[:password])
     if @user.valid?
       @user.save
-      render json: {email: @user.email, id: @user.id}, status: :created
+      render json: @user, status: :created
     else
       render json: { error: 'failed to create user' }, status: :not_acceptable
     end
@@ -45,11 +50,6 @@ class UsersController < ApplicationController
     end
   end
 
-  def get_wishlist
-    @user = User.find(params[:id])
-    @wishlist = Wishlist.where(user: @user)
-    render json: wishlist
-  end
 
   def wishListed
     @user = User.find(params[:id])

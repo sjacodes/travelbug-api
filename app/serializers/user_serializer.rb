@@ -1,8 +1,4 @@
 class UserSerializer < ActiveModel::Serializer
-  attributes :id, :name, :email, :wishlistedHotels
+  attributes :id, :name, :email
 
-  def wishlistedHotels
-    object.findUsersWishListedHotels
-  end
-  
 end

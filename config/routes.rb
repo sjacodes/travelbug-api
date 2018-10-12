@@ -21,6 +21,8 @@ Rails.application.routes.draw do
   resources :users
   post "/signin", to: 'users#signin'
   post "/signup", to: 'users#signup'
+  get "/users/:user_id/wishlist", to: 'users#get_wishlist'
+  
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 

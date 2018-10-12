@@ -24,7 +24,7 @@ require 'csv'
 
 
 # # CHECKLIST ITEM
-# checklistItems = ChecklistItem.create([{ lineitem: 'airport transfer available'}, { lineitem: 'late checkout offered'}, {lineitem: 'offers packages and discounts'}, {lineitem: 'within my price range'} ])
+# checklistItems = ChecklistItem.create([{ lineitem: 'Is within my price range'}, { lineitem: 'Has availability for my prefered dates'}, {lineitem: 'Offers packages, deals and discounts'}, {lineitem: 'Airport transfer available on request'}, {lineitem: 'Late checkout available'}])
 
 
 # # USERS CHECKLISTED ITEM
@@ -35,7 +35,9 @@ require 'csv'
 
 
 
-Hotel.destroy_all
+# Hotel.destroy_all
+checklistItems = ChecklistItem.create([{ lineitem: 'Is within my price range'}, { lineitem: 'Has availability for my prefered dates'}, {lineitem: 'Offers packages, deals and discounts'}, {lineitem: 'Airport transfer available on request'}, {lineitem: 'Late checkout available'}])
+
 
 csv_text = File.read(Rails.root.join('db', 'seeds', 'mod_5_data.csv'))
 csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
