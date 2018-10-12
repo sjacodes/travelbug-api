@@ -8,7 +8,7 @@ class UsersController < ApplicationController
   def signin
     user = User.find_by(email: params[:email])
     if user && user.authenticate(params[:password])
-      render json: {email: user.email, id: user.id}
+      render json: {email: user.email, id: user.id, wishlisted_hotels: user.findUsersWishListedHotels}
     else
       render json: { error: 'Invalid username and password combination.' }, status: 400
     end

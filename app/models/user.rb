@@ -6,9 +6,8 @@ class User < ApplicationRecord
 
 
   def findUsersWishListedHotels
-    id_array = WishlistedHotels.all.select{|wishlistedhotel| wishlistedhotel.user_id == self.id}.map{|wishlistedhotel| wishlistedhotel.hotel_id}
-    id_array.map do |arr_id|
-      Hotel.all.find{|hotel|hotel.id ==arr_id}
+    self.wishlisted_hotels.map do |wlh|
+      wlh.hotel
     end
   end
 
