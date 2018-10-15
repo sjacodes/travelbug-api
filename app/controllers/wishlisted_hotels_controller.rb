@@ -9,7 +9,7 @@ class WishlistedHotelsController < ApplicationController
   end
 
   def destroy
-    WishlistedHotel.find_by(user_id: params[:user_id], hotel_id: params[:hotel_id]).destroy
+    WishlistedHotel.find(params[:id]).destroy
   end
 
   def update
