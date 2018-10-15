@@ -22,7 +22,7 @@ Rails.application.routes.draw do
   post "/signin", to: 'users#signin'
   post "/signup", to: 'users#signup'
   get "/users/:user_id/wishlist", to: 'users#get_wishlist'
-  
+  patch "/wishlisted_hotels/:wishlistedhotel_id", to: 'wishlisted_hotels#update'
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
