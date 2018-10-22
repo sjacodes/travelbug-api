@@ -1,12 +1,26 @@
 class WishlistedHotelsController < ApplicationController
 
   def create
-    hotel = Hotel.find(params["hotel"]["id"])
+    # if params['hotel'] is array
+    # iterate and do this for each one
+    # else 
     user = User.find(params["user"]["id"])
-    wlh = WishlistedHotel.create(user_id: user.id, hotel_id: hotel.id)
-    wlh.create_checklist_items
-    render json: user.wishlisted_hotels
+    if params['hotel'].kind_of?(Array)
+      params['hotel'].each do |hotel|
+        hotel_instance = Hotel.find(hotel['hotel_id'])
+        wlh = WishlistedHotel.create(user_id: user.id, hotel_id: hotel_instance.id, note: hotel['note'])
+        wlh.create_checklist_items(hotel['checklist_items'])
+      end
+      render json: user.wishlisted_hotels
+    else
+      hotel = Hotel.find(params["hotel"]["id"])
+      wlh = WishlistedHotel.create(user_id: user.id, hotel_id: hotel.id)
+      wlh.create_checklist_items
+      render json: user.wishlisted_hotels
+    end
   end
+
+
 
   def destroy
     WishlistedHotel.find(params[:id]).destroy
