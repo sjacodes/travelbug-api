@@ -8,7 +8,7 @@ class UsersController < ApplicationController
   def signin
     user = User.find_by(email: params[:email])
     if user && user.authenticate(params[:password])
-      render json: user
+      render json: {email: user.email, token: issue_token({id: user.id}), id: user.id}
     else
       render json: { error: 'Invalid username and password combination.' }, status: 400
     end
@@ -33,7 +33,7 @@ class UsersController < ApplicationController
     @user = User.new(email: params[:email], password: params[:password])
     if @user.valid?
       @user.save
-      render json: @user, status: :created
+      render json: {email: @user.email, token: issue_token({id: @user.id}), id: @user.id}, status: :created
     else
       render json: { error: @user.errors.full_messages }, status: :not_acceptable
     end
