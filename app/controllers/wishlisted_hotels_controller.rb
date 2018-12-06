@@ -1,9 +1,6 @@
 class WishlistedHotelsController < ApplicationController
 
   def create
-    # if params['hotel'] is array
-    # iterate and do this for each one
-    # else 
     user = User.find(params["user"]["id"])
     if params['hotel'].kind_of?(Array)
       params['hotel'].each do |hotel|
