@@ -15,13 +15,13 @@ class ApplicationController < ActionController::API
     end
 
     def issue_token(payload)
-        JWT.encode(payload, ENV["JWT_SECRET"])
+        JWT.encode(payload, Rails.application.secrets.jwt_secret)
     end
 
     def current_user_id
         if request.headers['Authorization'].present?
             begin
-                return JWT.decode(request.headers['Authorization'], ENV["JWT_SECRET"]).first['id']
+                return JWT.decode(request.headers['Authorization'], Rails.application.secrets.jwt_secret).first['id']
             rescue JWT::ExpiredSignature, JWT::VerificationError, JWT::DecodeError
                 render json: { error: 'Unauthorized Access' }, status: 401
             end
