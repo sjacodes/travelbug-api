@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  before_action :authenticate_user!, :except => [:signup, :signin]
 
   def index
     @users = User.all
@@ -8,18 +9,9 @@ class UsersController < ApplicationController
   def signin
     user = User.find_by(email: params[:email])
     if user && user.authenticate(params[:password])
-      render json: {email: user.email, token: issue_token({id: user.id}), id: user.id}
+      render json: { token: issue_token({id: user.id}), user_id: user.id }
     else
-      render json: { error: 'Invalid username and password combination.' }, status: 400
-    end
-  end
-
-  def validate
-    user = currrent_user
-    if user
-      render json: {email: user.email, token: token}
-    else
-      render json: {error: 'Validation failed.'}, status: 400
+      render json: { error: 'Invalid username and password combination.' }, status: :unauthorized
     end
   end
 
@@ -28,17 +20,15 @@ class UsersController < ApplicationController
     render json: user.wishlisted_hotels
   end
 
-
   def signup
     @user = User.new(email: params[:email], password: params[:password])
     if @user.valid?
       @user.save
-      render json: {email: @user.email, token: issue_token({id: @user.id}), id: @user.id}, status: :created
+      render json: { token: issue_token({id: @user.id}), user_id: @user.id }, status: :created
     else
-      render json: { error: @user.errors.full_messages }, status: :not_acceptable
+      render json: { error: @user.errors.full_messages.first }, status: :not_acceptable
     end
   end
-
 
   def update
     @user = User.find(params[:id])
@@ -50,12 +40,10 @@ class UsersController < ApplicationController
     end
   end
 
-
   def wishListed
     @user = User.find(params[:id])
     render json: @user
   end
-
 
   def add_hotel
     @user = User.find_by(email: params[:user_email])
