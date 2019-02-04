@@ -5,7 +5,7 @@ class ApplicationController < ActionController::API
     def authenticate_user!
         if request.headers['Authorization'].present?
             begin
-                jwt_payload = JWT.decode(request.headers['Authorization'], secret).first
+                jwt_payload = JWT.decode(request.headers['Authorization'], ENV["JWT_SECRET"]).first
             rescue JWT::ExpiredSignature, JWT::VerificationError, JWT::DecodeError
                 render json: { error: 'Unauthorized Access' }, status: 401
             end
@@ -15,13 +15,13 @@ class ApplicationController < ActionController::API
     end
 
     def issue_token(payload)
-        JWT.encode(payload, secret)
+        JWT.encode(payload, ENV["JWT_SECRET"])
     end
 
     def current_user_id
         if request.headers['Authorization'].present?
             begin
-                return JWT.decode(request.headers['Authorization'], secret).first['id']
+                return JWT.decode(request.headers['Authorization'], ENV["JWT_SECRET"]).first['id']
             rescue JWT::ExpiredSignature, JWT::VerificationError, JWT::DecodeError
                 render json: { error: 'Unauthorized Access' }, status: 401
             end
@@ -30,7 +30,4 @@ class ApplicationController < ActionController::API
         end
     end
 
-    def secret
-        'shhh'
-    end 
 end
