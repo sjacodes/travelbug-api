@@ -5,7 +5,7 @@ class ApplicationController < ActionController::API
     def authenticate_user!
         if request.headers['Authorization'].present?
             begin
-                jwt_payload = JWT.decode(request.headers['Authorization'], ENV["JWT_SECRET"]).first
+                jwt_payload = JWT.decode(request.headers['Authorization'], Rails.application.secrets.jwt_secret).first
             rescue JWT::ExpiredSignature, JWT::VerificationError, JWT::DecodeError
                 render json: { error: 'Unauthorized Access' }, status: 401
             end

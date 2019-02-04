@@ -31,15 +31,6 @@ module TravelbugApi
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
-    config.secret_key_base = ENV["SECRET_KEY_BASE"]
-
-    config.before_configuration do
-      env_file = File.join(Rails.root, 'config', 'env.yml')
-      if File.exists?(env_file)
-        YAML.load(File.open(env_file)).each do |key, value|
-          ENV[key.to_s] = value
-        end
-      end
-    end
+    config.secret_key_base = Rails.application.secrets.secret_key_base
   end
 end
