@@ -1,29 +1,33 @@
+# Refactored auth using JWTs only: https://thinkster.io/tutorials/rails-json-api/setting-up-users-and-authentication-for-our-api
+
 class ApplicationController < ActionController::API
-    def currrent_user 
-        User.find(token_user_id)
-    end 
+
+    def authenticate_user!
+        if request.headers['Authorization'].present?
+            begin
+                jwt_payload = JWT.decode(request.headers['Authorization'], Rails.application.secrets.jwt_secret).first
+            rescue JWT::ExpiredSignature, JWT::VerificationError, JWT::DecodeError
+                render json: { error: 'Unauthorized Access' }, status: 401
+            end
+        else
+            render json: { error: 'No Authentication Header Present' }, status: 401
+        end
+    end
 
     def issue_token(payload)
-        JWT.encode(payload, secret)
-    end 
-
-    def token_user_id
-        decoded_token.first['id']
-    end 
-
-    def decoded_token
-        begin 
-            return JWT.decode(token, secret)
-        rescue JWT::DecodeError
-            return [{}]
-        end 
+        JWT.encode(payload, Rails.application.secrets.jwt_secret)
     end
 
-    def token
-        request.headers['Authorization']
+    def current_user_id
+        if request.headers['Authorization'].present?
+            begin
+                return JWT.decode(request.headers['Authorization'], Rails.application.secrets.jwt_secret).first['id']
+            rescue JWT::ExpiredSignature, JWT::VerificationError, JWT::DecodeError
+                render json: { error: 'Unauthorized Access' }, status: 401
+            end
+        else
+            return nil
+        end
     end
 
-    def secret
-        'shhh'
-    end 
 end

@@ -48,7 +48,7 @@ csv.each do |row|
   t.city = row['city']
   t.country = row['country']
   t.website = row['website']
-  t.imageurl = "http://localhost:3000/images/full_images/#{t.name} #{t.city}.jpg"
+  t.imageurl = "https://res.cloudinary.com/#{Rails.application.secrets.cloudinary_user}/image/upload/w_#{800}/q_#{75}/v1549291218/travelbug/#{t.name}_#{t.city}.jpg".gsub(" ","_")
   t.save
   puts "#{t.name} saved"
 end

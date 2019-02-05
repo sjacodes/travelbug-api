@@ -1,7 +1,8 @@
 class WishlistedHotelsController < ApplicationController
+  before_action :authenticate_user!
 
   def create
-    user = User.find(params["user"]["id"])
+    user = User.find(current_user_id)
     if params['hotel'].kind_of?(Array)
       params['hotel'].each do |hotel|
         hotel_instance = Hotel.find(hotel['hotel_id'])
@@ -17,10 +18,9 @@ class WishlistedHotelsController < ApplicationController
     end
   end
 
-
-
   def destroy
     WishlistedHotel.find(params[:id]).destroy
+    render json: {}, status: 200
   end
 
   def update
